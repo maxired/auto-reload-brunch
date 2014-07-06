@@ -64,6 +64,10 @@ AutoReloader.prototype.onCompile = function(changedFiles) {
   var didCompile = changedFiles.length > 0;
   var allCss = didCompile && changedFiles.every(isCss);
 
+  if (toString.call(enabled) === '[object Function]') {
+    enabled = enabled();
+  }
+
   if (toString.call(enabled) === '[object Object]') {
     if (!(didCompile || enabled.assets)) return;
     if (allCss) {
