@@ -2,6 +2,20 @@
   var WebSocket = window.WebSocket || window.MozWebSocket;
   var br = window.brunch = (window.brunch || {});
   var ar = br['auto-reload'] = (br['auto-reload'] || {});
+
+  
+  var interval = setInterval(  function(){
+     if(document.readyState === "complete"){
+      clearInterval(interval);
+      if ( window.location.href.indexOf('page_y') != -1 ) {
+        var match = window.location.search.split('?')[1].split("&")[0].split("=");
+         setTimeout(function(){ 
+          document.getElementsByTagName("body")[0].scrollTop = 0; 
+          document.getElementsByTagName("body")[0].scrollTop = +match[1]; 
+      }
+    }
+  } , 1);
+
   if (!WebSocket || ar.disabled) return;
 
   var cacheBuster = function(url){
@@ -12,7 +26,13 @@
 
   var reloaders = {
     page: function(){
-      window.location.reload(true);
+      var page_y = document.getElementsByTagName("body")[0].scrollTop;
+      var old =   window.location.href;
+      var next = window.location.origin + window.location.pathname + '?page_y=' +  page_y + window.location.hash;   
+      window.location.href =  next
+      if(next == old){
+        window.location.reload(true);
+      }
     },
 
     stylesheet: function(){
